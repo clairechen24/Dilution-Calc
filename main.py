@@ -1,6 +1,5 @@
 from tkinter import *
 
-# calculations 
 def load_method():
     output_message = ""
 
@@ -26,6 +25,15 @@ def load_method():
     V1 = float(initialvol.get())
     globals()['V1'] = V1
 
+    min_vol = float(minvol.get())
+    max_vol = float(maxvol.get())
+
+    if min_vol > V1:
+        result_text.delete('1.0', END)
+        result_text.insert(END, "Not valid: Minimum volume of beaker is greater than initial volume.")
+        return
+    
+
     if 'c1' in concentrations:
         C1 = concentrations['c1']
         V0 = C1 * V1 / C0
@@ -37,9 +45,10 @@ def load_method():
     
     #step 4 
     total_volume = V1
-    for i in range(1, len(concentrations)):
-        current_conc = concentrations[f'c{i}']
-        next_conc = concentrations[f'c{i+1}']
+    current_conc = concentrations['c1']
+    
+    for i in range(2, len(concentrations) + 1):
+        next_conc = concentrations[f'c{i}']
 
         if current_conc < next_conc:
             Vi_0 = ((next_conc - current_conc) * total_volume) / (C0 - next_conc)
@@ -83,21 +92,21 @@ def export_results(results):
         file.write(results)
     print(f"Calculation results exported to {filename}")
 
-# interface
 main = Tk()
 main.title("Dilution Calculator")
+main.configure(bg="#fa3939")
 
 #file name
-fileName_label = Label(main, text = "File name")
+fileName_label = Label(main, text = "File name", bg="#fa3939")
 fileName_label.grid(row=0, column=0)
 
 file_name = Entry(main)
 file_name.grid(row=0, column=1)
-filetxt = Label(main, text = ".txt")
+filetxt = Label(main, text = ".txt", bg="#fa3939")
 filetxt.grid(row=0, column = 2)
 
 #[stock solution]
-stocksol_label = Label(main, text="Concentration of Stock Solution")
+stocksol_label = Label(main, text="Concentration of Stock Solution", bg="#fa3939")
 stocksol_label.grid(row=1, column=0)
 
 stocksol = Entry(main)
@@ -107,9 +116,10 @@ clicked = StringVar()
 clicked.set("mmol/L")
 drop = OptionMenu(main, clicked, "mol/L", "mmol/L", "Mmol/L", "nmol/L")
 drop.grid(row=1, column=2)
+drop.configure(bg="#fa3939")
 
 #required concentrations 
-conc_label = Label(main, text="Required Concentrations (seperated by a space)")
+conc_label = Label(main, text="Required Concentrations (seperated by a space)", bg="#fa3939")
 conc_label.grid(row=2, column=0)
 
 conc = Entry(main)
@@ -119,53 +129,54 @@ clicked = StringVar()
 clicked.set("mmol/L")
 drop = OptionMenu(main, clicked, "mol/L", "mmol/L", "Mmol/L", "nmol/L")
 drop.grid(row=2, column=2)
+drop.configure(bg="#fa3939")
 
 #max vol of beaker
-maxvol_label = Label(main, text="Maximum Volume of Beaker")
+maxvol_label = Label(main, text="Maximum Volume of Beaker", bg="#fa3939")
 maxvol_label.grid(row=3, column=0)
 
 maxvol = Entry(main)
 maxvol.grid(row=3, column=1)
-unit1 = Label(main, text="mL")
+unit1 = Label(main, text="mL", bg="#fa3939")
 unit1.grid(row=3,column=2)
 
 #min vol of beaker
-minvol_label = Label(main, text="Minimum Volume of Beaker")
+minvol_label = Label(main, text="Minimum Volume of Beaker", bg="#fa3939")
 minvol_label.grid(row=4, column=0)
 
 minvol = Entry(main)
 minvol.grid(row=4, column=1)
-unit2 = Label(main, text="mL")
+unit2 = Label(main, text="mL", bg="#fa3939")
 unit2.grid(row=4,column=2)
 
 #min vol of pipette
-minpip_label = Label(main, text="Minimum Volume of Pipette Gun")
+minpip_label = Label(main, text="Minimum Volume of Pipette Gun", bg="#fa3939")
 minpip_label.grid(row=5, column=0)
 
 minpip = Entry(main)
 minpip.grid(row=5, column=1)
-unit3 = Label(main, text="mL")
+unit3 = Label(main, text="mL", bg="#fa3939")
 unit3.grid(row=5,column=2)
 
 #initial volume
-initialvol_label = Label(main, text="Initial Volume")
+initialvol_label = Label(main, text="Initial Volume", bg="#fa3939")
 initialvol_label.grid(row=6, column=0)
 
 initialvol = Entry(main)
 initialvol.grid(row=6, column=1)
-unit4 = Label(main, text="mL")
+unit4 = Label(main, text="mL", bg="#fa3939")
 unit4.grid(row=6,column=2)
 
 #load method
-loadmethod_button = Button(main, text="Load Method", command=load_method)
+loadmethod_button = Button(main, text="Load Method", command=load_method, bg="#fa3939")
 loadmethod_button.grid(row=7, column=0)
 
 var = IntVar()
-c = Checkbutton(main, text="Export Method", variable=var)
+c = Checkbutton(main, text="Export Method", variable=var, bg="#fa3939")
 c.grid(row=7, column=1)
 
 var1 = IntVar()
-c1 = Checkbutton(main, text="Export Results", variable=var1)
+c1 = Checkbutton(main, text="Export Results", variable=var1, bg="#fa3939")
 c1.grid(row=7, column=2)
 
 #results widget
