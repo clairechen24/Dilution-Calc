@@ -41,7 +41,7 @@ def load_method():
         
         output_message += f"Add {V0:.2f} mL of stock solution\n"
         output_message += f"Add {Vh2O:.2f} mL of water\n"
-        output_message += "******************************************\n"
+        output_message += "***************************************************\n"
     
     #step 4 
     total_volume = V1
@@ -53,17 +53,36 @@ def load_method():
         if current_conc < next_conc:
             Vi_0 = ((next_conc - current_conc) * total_volume) / (C0 - next_conc)
             Vi_plus_1 = Vi_0 + total_volume
-            output_message += f"Add {Vi_0:.2f} mL of stock solution.\n"
-            output_message += f"Total volume is {Vi_plus_1:.2f} mL.\n"
-            output_message += "******************************************\n"
-            total_volume = Vi_plus_1
+            if Vi_plus_1 > max_vol:
+                output_message += f"Total volume {Vi_plus_1:.2f} mL exceeds maximum beaker volume.\n"
+                next_conc = (C0 * total_volume) / (total_volume + Vi_0)
+                output_message += f"Using {next_conc:.2f} as new concentration.\n"
+                output_message += "***************************************************\n"
+
+            
+            else:
+                output_message += f"Add {Vi_0:.2f} mL of stock solution.\n"
+                output_message += f"Total volume is {Vi_plus_1:.2f} mL.\n"
+                output_message += "***************************************************\n"
+                total_volume = Vi_plus_1
+
         elif current_conc > next_conc:
             Vi_plus_1 = (current_conc * total_volume) / next_conc
             Vh2O_i = Vi_plus_1 - total_volume
-            output_message += f"Add {Vh2O_i:.2f} mL of water.\n"
-            output_message += f"Total volume is {Vi_plus_1:.2f} mL. \n"
-            output_message += "******************************************"
-            total_volume = Vi_plus_1
+            if Vi_plus_1 > max_vol:
+                output_message += f"Total volume {Vi_plus_1:.2f} mL exceeds maximum beaker volume.\n"
+                next_conc = (current_conc * total_volume) / (total_volume + Vh2O_i)
+                output_message += f"Using {next_conc:.2f} as new concentration.\n"
+                output_message += "***************************************************\n"
+
+            
+            else:
+                output_message += f"Add {Vh2O_i:.2f} mL of water.\n"
+                output_message += f"Total volume is {Vi_plus_1:.2f} mL.\n"
+                output_message += "***************************************************\n"
+                total_volume = Vi_plus_1
+
+        current_conc = next_conc
 
     #export method & results
     result_text.delete('1.0', END)
@@ -180,7 +199,7 @@ c1 = Checkbutton(main, text="Export Results", variable=var1, bg="#fa3939")
 c1.grid(row=7, column=2)
 
 #results widget
-result_text = Text(main, height=10, width=50)
+result_text = Text(main, height=12, width=55)
 result_text.grid(row=9, column=0, columnspan=3)
 
 main.mainloop()
